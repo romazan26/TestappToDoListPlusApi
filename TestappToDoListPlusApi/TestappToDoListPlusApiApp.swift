@@ -11,7 +11,8 @@ import SwiftUI
 struct TestappToDoListPlusApiApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ToDoListView()
+                .preferredColorScheme(.dark)
         }
     }
 }
