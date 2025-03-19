@@ -12,34 +12,65 @@ struct ToDoListView: View {
     var body: some View {
         NavigationStack {
             ZStack(alignment: .bottom) {
-                VStack {
-                    Image(systemName: "globe")
-                        .imageScale(.large)
-                        .foregroundStyle(.tint)
+                VStack(spacing: 20) {
+                    //MARK: - Search bar
+                    SearchBarView(searchText: $vm.searchText)
+                    
+                    //MARK: - List of tasks
+                    if vm.filteredTasks.isEmpty {
+                        Text("Нет задач")
+                            .foregroundColor(.gray)
+                    }else{
+                        ScrollView {
+                            LazyVStack {
+                                ForEach(vm.filteredTasks) { task in
+                                    Button {
+                                        vm.simpleTask = task
+                                        vm.isPresentTaskInfo.toggle()
+                                    } label: {
+                                        TaskCellView(task: task) {
+                                            vm.toggleIsCompleted(task: task)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
                     Spacer()
                 }
                 .padding()
+                
+                //MARK: - Bottom tool bar
                 HStack{
                     Spacer()
                     Text("\(vm.tasks.count) Задач")
                         .foregroundStyle(.white)
                     Spacer()
-                    NavigationLink {
-                        AddOrEditTaskView(vm: vm)
+                    Button {
+                        vm.isPresentAddTask.toggle()
                     } label: {
                         Image(systemName: "square.and.pencil")
                             .resizable()
                             .frame(width: 30, height: 30)
                     }
-
                 }
                 .padding(.horizontal, 20)
                 .frame(height: 85)
                 .frame(maxWidth: .infinity)
                 .background(Color.grayApp)
+                
+                //MARK: - Task info
+                if vm.isPresentTaskInfo {
+                    TaskInfoView(vm: vm)
+                }
             }
-            .ignoresSafeArea()
+            .ignoresSafeArea(edges: .bottom)
             .navigationTitle("Задачи")
+            .navigationDestination(isPresented: $vm.isPresentAddTask) {
+                AddOrEditTaskView(vm: vm)
+            }
+            .animation(.easeInOut, value: vm.isPresentTaskInfo)
         }
     }
 }
