@@ -9,12 +9,14 @@ import SwiftUI
 
 struct ToDoListView: View {
     @StateObject var vm = ToDoListViewModel()
+    @FocusState private var isFocused: Bool
     var body: some View {
         NavigationStack {
             ZStack(alignment: .bottom) {
                 VStack(spacing: 20) {
                     //MARK: - Search bar
                     SearchBarView(searchText: $vm.searchText)
+                        .focused($isFocused)
                     
                     //MARK: - List of tasks
                     if vm.filteredTasks.isEmpty {
@@ -38,6 +40,9 @@ struct ToDoListView: View {
                     }
                     
                     Spacer()
+                }
+                .onTapGesture {
+                    isFocused = false
                 }
                 .padding()
                 
@@ -64,6 +69,9 @@ struct ToDoListView: View {
                 if vm.isPresentTaskInfo {
                     TaskInfoView(vm: vm)
                 }
+            }
+            .onTapGesture {
+                isFocused = false
             }
             .ignoresSafeArea(edges: .bottom)
             .navigationTitle("Задачи")

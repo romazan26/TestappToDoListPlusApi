@@ -161,7 +161,7 @@ final class ToDoListViewModel: ObservableObject {
             }
         }
     
-    private func fetchTasks() {
+     func fetchTasks() {
            DispatchQueue.global(qos: .background).async {
                let context = self.manager.context
                context.perform {

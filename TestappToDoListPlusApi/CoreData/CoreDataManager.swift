@@ -11,7 +11,7 @@ final class CoreDataManager {
     static let instance = CoreDataManager()
     
     let container: NSPersistentContainer
-    let context: NSManagedObjectContext
+    var context: NSManagedObjectContext
     
     init() {
         container = NSPersistentContainer(name: "ToDoList")
